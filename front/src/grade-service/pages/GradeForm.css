@@ -1,0 +1,104 @@
+.form-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.form-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 36px;
+}
+
+.form-title {
+  font-size: 1.6rem;
+  color: #154170;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.form-alert {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.form-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #154170;
+  box-shadow: 0 0 0 3px rgba(21,65,112,0.15);
+}
+
+.input-error { border-color: #dc2626 !important; }
+
+.error-msg {
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.form-actions { display: flex; gap: 12px; margin-top: 24px; }
+
+.btn-cancel {
+  flex: 1;
+  padding: 12px;
+  background: #e5e7eb;
+  color: #374151;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-cancel:hover { background: #d1d5db; }
+
+.btn-submit {
+  flex: 2;
+  padding: 12px;
+  background-color: #154170;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-submit:hover { background-color: #1d3557; }
+
+.form-loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.1rem;
+  color: #154170;
+}
