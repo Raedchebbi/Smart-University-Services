@@ -1,0 +1,283 @@
+{
+  "info": {
+    "name": "Academic Service - Plateforme Universitaire",
+    "description": "Collection Postman pour le Academic Service (Courses & Enrollments)\n\nPrérequis : Keycloak doit être démarré sur localhost:8090 avec le realm 'univ-realm'.\nRemplacez {{access_token}} par un JWT valide obtenu depuis Keycloak.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "access_token",
+      "value": "VOTRE_TOKEN_JWT_ICI"
+    }
+  ],
+  "item": [
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "Créer un cours",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Mathématiques Avancées\",\n  \"description\": \"Cours de mathématiques pour L3\",\n  \"credits\": 6,\n  \"professorId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/courses",
+              "host": ["{{base_url}}"],
+              "path": ["api", "courses"]
+            },
+            "description": "Créer un nouveau cours. Rôles requis : ADMIN ou PROF"
+          }
+        },
+        {
+          "name": "Créer un second cours",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Programmation Java\",\n  \"description\": \"Introduction à Java et POO\",\n  \"credits\": 4,\n  \"professorId\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/courses",
+              "host": ["{{base_url}}"],
+              "path": ["api", "courses"]
+            }
+          }
+        },
+        {
+          "name": "Lister tous les cours",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/courses",
+              "host": ["{{base_url}}"],
+              "path": ["api", "courses"]
+            },
+            "description": "Lister tous les cours. Rôles requis : ADMIN, PROF ou ETUDIANT"
+          }
+        },
+        {
+          "name": "Détail d'un cours (id=1)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/courses/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "courses", "1"]
+            },
+            "description": "Détail d'un cours par ID. Rôles requis : ADMIN, PROF ou ETUDIANT"
+          }
+        },
+        {
+          "name": "Modifier un cours (id=1)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Mathématiques Avancées - Mise à jour\",\n  \"description\": \"Cours mis à jour\",\n  \"credits\": 8,\n  \"professorId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/courses/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "courses", "1"]
+            },
+            "description": "Modifier un cours. Rôles requis : ADMIN ou PROF"
+          }
+        },
+        {
+          "name": "Supprimer un cours (id=1)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/courses/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "courses", "1"]
+            },
+            "description": "Supprimer un cours. Rôle requis : ADMIN uniquement"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enrollments",
+      "item": [
+        {
+          "name": "Inscrire un étudiant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"courseId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enrollments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enrollments"]
+            },
+            "description": "Inscrire un étudiant à un cours. Rôles requis : ADMIN ou PROF"
+          }
+        },
+        {
+          "name": "Inscrire un second étudiant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 2,\n  \"courseId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enrollments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enrollments"]
+            }
+          }
+        },
+        {
+          "name": "Lister toutes les inscriptions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/enrollments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enrollments"]
+            },
+            "description": "Lister toutes les inscriptions. Rôle requis : ADMIN"
+          }
+        },
+        {
+          "name": "Inscriptions d'un étudiant (studentId=1)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/enrollments/student/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enrollments", "student", "1"]
+            },
+            "description": "Inscriptions d'un étudiant. Rôles requis : ADMIN, PROF ou ETUDIANT"
+          }
+        },
+        {
+          "name": "Inscriptions d'un cours (courseId=1)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/enrollments/course/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enrollments", "course", "1"]
+            },
+            "description": "Inscriptions pour un cours. Rôles requis : ADMIN ou PROF"
+          }
+        },
+        {
+          "name": "Annuler une inscription (id=1)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/enrollments/1/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enrollments", "1", "cancel"]
+            },
+            "description": "Annuler une inscription. Rôles requis : ADMIN ou PROF"
+          }
+        }
+      ]
+    }
+  ]
+}
