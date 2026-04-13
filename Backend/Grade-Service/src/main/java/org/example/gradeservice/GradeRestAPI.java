@@ -5,6 +5,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/grades")
+@CrossOrigin(origins = "http://localhost:5173",
+        methods = {RequestMethod.GET, RequestMethod.POST,
+                RequestMethod.PUT, RequestMethod.DELETE},
+        allowedHeaders = "*")
 public class GradeRestAPI {
 
     private final GradeService gradeService;
