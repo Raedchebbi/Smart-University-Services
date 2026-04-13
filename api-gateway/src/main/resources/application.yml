@@ -1,0 +1,84 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # academic-service: /api/academic/** → /api/** in academic-service
+        - id: academic-service
+          uri: lb://academic-service
+          predicates:
+            - Path=/api/academic/**
+          filters:
+            - RewritePath=/api/academic/(?<segment>.*), /api/${segment}
+
+        # user-service: /api/users/** → pass-through (same path internally)
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/**
+
+        # grade-service: /api/grades/** → /grades/** in grade-service
+        - id: grade-service
+          uri: lb://grade-service
+          predicates:
+            - Path=/api/grades/**
+          filters:
+            - RewritePath=/api/grades(?<segment>/?.*), /grades${segment}
+
+        # reclamation-service: /api/reclamations/** → /reclamations/** in reclamation-service
+        - id: reclamation-service
+          uri: lb://reclamation-service
+          predicates:
+            - Path=/api/reclamations/**
+          filters:
+            - RewritePath=/api/reclamations(?<segment>/?.*), /reclamations${segment}
+
+        # classe-niveau-service: /api/classes/** → /classes/** in NestJS service
+        - id: classe-niveau-classes
+          uri: lb://CLASSE-NIVEAU-SERVICE
+          predicates:
+            - Path=/api/classes/**
+          filters:
+            - RewritePath=/api/classes(?<segment>/?.*), /classes${segment}
+
+        # classe-niveau-service: /api/niveaux/** → /niveaux/** in NestJS service
+        - id: classe-niveau-niveaux
+          uri: lb://CLASSE-NIVEAU-SERVICE
+          predicates:
+            - Path=/api/niveaux/**
+          filters:
+            - RewritePath=/api/niveaux(?<segment>/?.*), /niveaux${segment}
+
+  # JWT validation via Keycloak
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/smart-university
+
+# Eureka Client
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG

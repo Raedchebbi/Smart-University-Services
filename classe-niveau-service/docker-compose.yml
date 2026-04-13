@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  mongo-classe:
+    image: mongo:7
+    container_name: mongo-classe
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-classe-data:/data/db
+
+volumes:
+  mongo-classe-data:
