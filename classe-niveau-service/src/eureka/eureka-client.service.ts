@@ -11,18 +11,19 @@ export class EurekaClientService implements OnModuleInit, OnModuleDestroy {
     const port = parseInt(this.configService.get<string>('PORT', '3000'), 10);
     const eurekaHost = this.configService.get<string>('EUREKA_HOST', 'localhost');
     const eurekaPort = parseInt(this.configService.get<string>('EUREKA_PORT', '8761'), 10);
+    const appHost = this.configService.get<string>('APP_HOST', '127.0.0.1');
 
     this.client = new Eureka({
       instance: {
         app: 'CLASSE-NIVEAU-SERVICE',
         instanceId: `classe-niveau-service:${port}`,
-        hostName: '127.0.0.1',
-        ipAddr: '127.0.0.1',
+        hostName: appHost,
+        ipAddr: appHost,
         port: { $: port, '@enabled': true },
         vipAddress: 'classe-niveau-service',
-        statusPageUrl: `http://127.0.0.1:${port}/info`,
-        healthCheckUrl: `http://127.0.0.1:${port}/health`,
-        homePageUrl: `http://127.0.0.1:${port}/`,
+        statusPageUrl: `http://${appHost}:${port}/info`,
+        healthCheckUrl: `http://${appHost}:${port}/health`,
+        homePageUrl: `http://${appHost}:${port}/`,
         dataCenterInfo: {
           '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
           name: 'MyOwn',

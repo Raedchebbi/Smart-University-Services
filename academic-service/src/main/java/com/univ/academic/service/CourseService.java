@@ -6,6 +6,8 @@ import com.univ.academic.entity.Course;
 import com.univ.academic.exception.ResourceNotFoundException;
 import com.univ.academic.exception.ValidationException;
 import com.univ.academic.repository.CourseRepository;
+import com.univ.academic.event.AcademicEventPublisher;
+import com.univ.academic.event.CourseEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 /**
  * Service métier pour la gestion des cours.
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final AcademicEventPublisher eventPublisher;
 
     /**
      * Crée un nouveau cours après vérification de l'unicité du titre.
@@ -44,6 +48,10 @@ public class CourseService {
 
         Course saved = courseRepository.save(course);
         log.info("Cours créé avec succès : id={}, titre={}", saved.getId(), saved.getTitle());
+
+        eventPublisher.publishCourseCreated(new CourseEvent(
+                saved.getId(), saved.getTitle(), "CREATED", LocalDateTime.now()));
+
         return toResponseDTO(saved);
     }
 
@@ -87,6 +95,10 @@ public class CourseService {
 
         Course updated = courseRepository.save(course);
         log.info("Cours mis à jour : id={}", updated.getId());
+
+        eventPublisher.publishCourseUpdated(new CourseEvent(
+                updated.getId(), updated.getTitle(), "UPDATED", LocalDateTime.now()));
+
         return toResponseDTO(updated);
     }
 
@@ -97,6 +109,9 @@ public class CourseService {
         Course course = findCourseOrThrow(id);
         courseRepository.delete(course);
         log.info("Cours supprimé : id={}", id);
+
+        eventPublisher.publishCourseDeleted(new CourseEvent(
+                id, course.getTitle(), "DELETED", LocalDateTime.now()));
     }
 
     // --- Méthodes utilitaires internes ---

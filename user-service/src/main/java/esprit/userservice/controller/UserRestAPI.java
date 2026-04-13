@@ -53,6 +53,12 @@ public class UserRestAPI {
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
+    @GetMapping("/name/{name}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
+    public ResponseEntity<User> getUserByName(@PathVariable String name) {
+        return ResponseEntity.ok(userService.getUserByName(name));
+    }
+
     @GetMapping("/role/{role}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> getUsersByRole(@PathVariable Role role) {

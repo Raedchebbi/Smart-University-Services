@@ -59,6 +59,12 @@ public class UserService {
     }
 
 
+    public User getUserByName(String name) {
+        return userRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("User not found with name: " + name));
+    }
+
+
     public List<User> getUsersByRole(Role role) {
         return userRepository.findByRole(role);
     }

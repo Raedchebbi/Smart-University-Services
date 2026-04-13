@@ -64,7 +64,7 @@ export default function ReclamationInbox() {
                     onClick={() => setSelected(r)}
                     className={`cursor-pointer hover:bg-indigo-50 transition-colors ${i % 2 === 1 ? 'bg-gray-50/50' : ''} ${selected?.id === r.id ? 'bg-indigo-50' : ''}`}
                   >
-                    <td className="px-4 py-3 text-sm font-mono text-xs text-gray-700">{r.studentId}</td>
+                    <td className="px-4 py-3 text-sm font-mono text-xs text-gray-700">{r.studentName}</td>
                     <td className="px-4 py-3 text-sm font-medium text-gray-800">{r.subject}</td>
                     <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">{r.description}</td>
                     <td className="px-4 py-3 text-sm text-gray-500">{new Date(r.createdAt).toLocaleDateString()}</td>
@@ -86,7 +86,7 @@ export default function ReclamationInbox() {
           <div className="space-y-3 text-sm">
             <div>
               <span className="text-gray-400 text-xs uppercase">Student</span>
-              <p className="font-mono text-xs mt-0.5">{selected.studentId}</p>
+              <p className="font-mono text-xs mt-0.5">{selected.studentName}</p>
             </div>
             <div>
               <span className="text-gray-400 text-xs uppercase">Subject</span>

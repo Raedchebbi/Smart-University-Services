@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/grades")
@@ -33,6 +34,15 @@ public class GradeRestAPI {
     public Grade getGradeById(@PathVariable Long id) {
         return gradeService.getGradeById(id)
                 .orElseThrow(() -> new RuntimeException("Grade not found"));
+    }
+
+    /**
+     * Scénario Feign 5 : GET /grades/{id}/details → enrichi avec infos étudiant via user-service
+     */
+    @GetMapping("/{id}/details")
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
+    public Map<String, Object> getGradeWithStudentInfo(@PathVariable Long id) {
+        return gradeService.getGradeWithStudentInfo(id);
     }
 
     @PutMapping("/{id}")

@@ -37,6 +37,13 @@ spring:
         jwt:
           issuer-uri: http://localhost:8180/realms/smart-university
 
+  # RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 # Eureka Client
 eureka:
   client:

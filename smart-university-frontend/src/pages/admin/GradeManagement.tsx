@@ -7,10 +7,10 @@ export default function GradeManagement() {
 
   const columns: Column<Grade>[] = [
     { key: 'id', header: 'ID' },
-    { key: 'studentId', header: 'Student' },
-    { key: 'courseId', header: 'Course' },
+    { key: 'studentName', header: 'Student' },
+    { key: 'subject', header: 'Course' },
     { key: 'semester', header: 'Semester' },
-    { key: 'value', header: 'Grade', render: (g) => String(g.value) },
+    { key: 'score', header: 'Grade', render: (g) => String(g.score) },
     { key: 'createdAt', header: 'Date', render: (g) => new Date(g.createdAt).toLocaleDateString() },
   ];
 

@@ -9,6 +9,9 @@ import com.univ.academic.exception.DuplicateEnrollmentException;
 import com.univ.academic.exception.ResourceNotFoundException;
 import com.univ.academic.exception.ValidationException;
 import com.univ.academic.repository.EnrollmentRepository;
+import com.univ.academic.event.AcademicEventPublisher;
+import com.univ.academic.event.EnrollmentEvent;
+import com.univ.academic.client.UserServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 /**
  * Service métier pour la gestion des inscriptions.
@@ -28,16 +32,26 @@ public class EnrollmentService {
 
     private final EnrollmentRepository enrollmentRepository;
     private final CourseService courseService;
+    private final AcademicEventPublisher eventPublisher;
+    private final UserServiceClient userServiceClient;
 
     /**
      * Inscrit un étudiant à un cours.
-     * Vérifie que :
-     * - Le cours existe
-     * - L'étudiant n'est pas déjà inscrit à ce cours
+     * Scénario Feign : Valider l'étudiant via user-service
      */
     public EnrollmentResponseDTO enrollStudent(EnrollmentRequestDTO request) {
         // Vérifier que le cours existe
         Course course = courseService.findCourseOrThrow(request.getCourseId());
+
+        // --- Feign: Valider l'étudiant via user-service ---
+        try {
+            var user = userServiceClient.getUserById(request.getStudentId());
+            log.info("Feign ► Étudiant id={} validé via user-service: {}",
+                    request.getStudentId(), user.get("name"));
+        } catch (Exception e) {
+            log.error("Feign ► Étudiant id={} introuvable dans user-service", request.getStudentId());
+            throw new ValidationException("Étudiant avec id=" + request.getStudentId() + " introuvable");
+        }
 
         // Vérifier que l'étudiant n'est pas déjà inscrit
         if (enrollmentRepository.existsByStudentIdAndCourseId(
@@ -54,6 +68,11 @@ public class EnrollmentService {
         Enrollment saved = enrollmentRepository.save(enrollment);
         log.info("Inscription créée : id={}, étudiant={}, cours={}",
                 saved.getId(), saved.getStudentId(), course.getId());
+
+        eventPublisher.publishEnrollmentCreated(new EnrollmentEvent(
+                saved.getId(), saved.getStudentId(), course.getId(),
+                "PENDING", "CREATED", LocalDateTime.now()));
+
         return toResponseDTO(saved);
     }
 
@@ -71,6 +90,11 @@ public class EnrollmentService {
         enrollment.setStatus(EnrollmentStatus.CANCELLED);
         Enrollment updated = enrollmentRepository.save(enrollment);
         log.info("Inscription annulée : id={}", enrollmentId);
+
+        eventPublisher.publishEnrollmentCancelled(new EnrollmentEvent(
+                updated.getId(), updated.getStudentId(), updated.getCourse().getId(),
+                "CANCELLED", "CANCELLED", LocalDateTime.now()));
+
         return toResponseDTO(updated);
     }
 

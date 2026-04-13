@@ -1,0 +1,48 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/smart-university/protocol/openid-connect/certs
+  cloud:
+    gateway:
+      routes:
+        - id: academic-service
+          uri: lb://academic-service
+          predicates:
+            - Path=/api/academic/**
+          filters:
+            - RewritePath=/api/academic/(?<segment>.*), /api/${segment}
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/**
+        - id: grade-service
+          uri: lb://grade-service
+          predicates:
+            - Path=/api/grades/**
+          filters:
+            - RewritePath=/api/grades(?<segment>/?.*), /grades${segment}
+        - id: reclamation-service
+          uri: lb://reclamation-service
+          predicates:
+            - Path=/api/reclamations/**
+          filters:
+            - RewritePath=/api/reclamations(?<segment>/?.*), /reclamations${segment}
+        - id: classe-niveau-classes
+          uri: lb://CLASSE-NIVEAU-SERVICE
+          predicates:
+            - Path=/api/classes/**
+          filters:
+            - RewritePath=/api/classes(?<segment>/?.*), /classes${segment}
+        - id: classe-niveau-niveaux
+          uri: lb://CLASSE-NIVEAU-SERVICE
+          predicates:
+            - Path=/api/niveaux/**
+          filters:
+            - RewritePath=/api/niveaux(?<segment>/?.*), /niveaux${segment}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
